@@ -5,8 +5,8 @@
 *.pdf
 .env
 
-/input
-/output
+input/
+output/
 venv/
 
 .DS_Store
