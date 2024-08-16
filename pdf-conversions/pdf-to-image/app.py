@@ -1,26 +1,29 @@
-import os
-import fitz  # PyMuPDFのインポート
+import argparse
 
-def convert_pdf_to_png(pdf_path, output_folder):
-    # PDFファイルを開く
-    doc = fitz.open(pdf_path)
+from pdf2image import convert_from_path
+
+
+def convert_pdf_to_png(input_pdf, output_prefix):
+    # PDFを画像に変換
+    images = convert_from_path(input_pdf)
+
+    # 画像を保存
+    for i, image in enumerate(images):
+        image.save(f'{output_prefix}_{i+1}.png', 'PNG')
     
-    # 出力フォルダが存在しない場合は作成
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    
-    # 各ページを処理
-    for page_number in range(len(doc)):
-        page = doc.load_page(page_number)  # ページを読み込む
-        pix = page.get_pixmap()  # ピクセルマップを取得
-        output_path = f"{output_folder}/page_{page_number + 1}.png"
-        pix.save(output_path)  # 画像として保存
+    print(f"Converted {len(images)} pages from {input_pdf} to PNG files.")
 
-    doc.close()
+def main():
+    # コマンドライン引数のパーサーを設定
+    parser = argparse.ArgumentParser(description='Convert PDF to PNG images.')
+    parser.add_argument('input_pdf', help='Input PDF file path')
+    parser.add_argument('output_prefix', help='Prefix for output PNG files')
 
-# 使用例
-pdf_path = 'input.pdf'
-output_folder = './output'
-convert_pdf_to_png(pdf_path, output_folder)
+    # 引数を解析
+    args = parser.parse_args()
 
-print("変換が完了しました。")
+    # PDF to PNG 変換を実行
+    convert_pdf_to_png(args.input_pdf, args.output_prefix)
+
+if __name__ == "__main__":
+    main()
