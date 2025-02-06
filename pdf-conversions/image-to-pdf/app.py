@@ -9,7 +9,8 @@ def images_to_pdf(input_folder, output_folder):
         os.makedirs(output_folder)
 
     # Get all .png files in the input folder
-    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(".png")]
+    # image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(".jpg")]
+    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith((".png", ".jpg", ".jpeg", ".gif"))]
 
     if not image_files:
         print("No PNG files found in the input folder.")
