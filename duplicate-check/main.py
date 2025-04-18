@@ -2,19 +2,28 @@ import re
 import sys
 from collections import Counter
 
-# 正規表現パターン: abc-def-1234567 形式
+# 動画IDの正規表現パターン
 pattern = re.compile(r'\b[a-zA-Z]+-[a-zA-Z]+-\d{7}\b')
 
-# 入力を読み込む（標準入力から改行区切り）
-file_names = sys.stdin.read().splitlines()
-
-# IDを抽出してカウント
+# 動画IDを格納
 ids = []
-for name in file_names:
-    matches = pattern.findall(name)
-    ids.extend(matches)
 
-# カウントして重複するものを抽出
+try:
+    for line in sys.stdin:
+        try:
+            line = line.strip()
+
+            # ID抽出
+            matches = pattern.findall(line)
+            if matches:
+                ids.extend(matches)
+        except UnicodeDecodeError:
+            # マルチバイト文字エラーを無視
+            continue
+except Exception as e:
+    print(f"エラー発生: {e}", file=sys.stderr)
+
+# 重複をカウント
 counter = Counter(ids)
 duplicates = [video_id for video_id, count in counter.items() if count > 1]
 
