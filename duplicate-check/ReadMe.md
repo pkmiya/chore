@@ -13,3 +13,8 @@ dir /b | python main.py
 ```
 ls | python main.py
 ```
+
+＊複数ディレクトリ・エラーを無視
+```
+find  /f/AppData/ /g/AppData/ /h/AppData/ /i/AppData/ -type f 2>/dev/null | python main.py
+```
